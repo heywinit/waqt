@@ -1,79 +1,58 @@
-.PHONY: build run test clean migrate-up migrate-down dev docker-build docker-run lint
+.PHONY: all build test clean run migrate-up migrate-down lint
 
-# Go parameters
+# Build variables
 BINARY_NAME=waqt-api
-MAIN_PATH=./cmd/server
 GO_FILES=$(shell find . -name '*.go' -not -path "./vendor/*")
 
-# Docker parameters
-DOCKER_IMAGE=waqt-backend
-DOCKER_TAG=latest
-
-all: clean build
+all: clean build test
 
 build:
-	@echo "Building..."
-	go build -o bin/$(BINARY_NAME) $(MAIN_PATH)
-
-run:
-	@echo "Running..."
-	go run $(MAIN_PATH)
+	go build -o bin/$(BINARY_NAME) ./cmd/server
 
 test:
-	@echo "Running tests..."
-	go test -v ./...
+	go test -v -race -cover ./...
 
 clean:
-	@echo "Cleaning..."
 	go clean
 	rm -f bin/$(BINARY_NAME)
 
+run:
+	go run cmd/server/main.go
+
 # Database migrations
 migrate-up:
-	@echo "Running migrations up..."
-	migrate -path migrations -database "$(DB_URL)" up
+	migrate -path migrations -database "$(DATABASE_URL)" up
 
 migrate-down:
-	@echo "Running migrations down..."
-	migrate -path migrations -database "$(DB_URL)" down
+	migrate -path migrations -database "$(DATABASE_URL)" down
 
-# Development
-dev:
-	@echo "Starting development server..."
-	air -c .air.toml
-
-# Install development tools
-install-tools:
-	@echo "Installing development tools..."
-	go install github.com/cosmtrek/air@latest
-	go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-
-# Linting
+# Development tools
 lint:
-	@echo "Running linter..."
 	golangci-lint run
 
 # Docker commands
 docker-build:
-	@echo "Building Docker image..."
-	docker build -t $(DOCKER_IMAGE):$(DOCKER_TAG) .
+	docker build -t waqt-api .
 
 docker-run:
-	@echo "Running Docker container..."
-	docker run -p 8080:8080 --env-file .env $(DOCKER_IMAGE):$(DOCKER_TAG)
+	docker run -p 8080:8080 --env-file .env waqt-api
+
+# Test database setup
+test-db-setup:
+	psql -U postgres -c "DROP DATABASE IF EXISTS waqt_test;"
+	psql -U postgres -c "CREATE DATABASE waqt_test;"
+	migrate -path migrations -database "postgres://postgres:postgres@localhost:5432/waqt_test?sslmode=disable" up
 
 # Help
 help:
 	@echo "Available commands:"
-	@echo "  make build         - Build the application"
-	@echo "  make run          - Run the application"
-	@echo "  make test         - Run tests"
-	@echo "  make clean        - Clean build files"
-	@echo "  make migrate-up   - Run database migrations up"
-	@echo "  make migrate-down - Run database migrations down"
-	@echo "  make dev          - Run development server with hot reload"
-	@echo "  make lint         - Run linter"
-	@echo "  make docker-build - Build Docker image"
-	@echo "  make docker-run   - Run Docker container"
-	@echo "  make install-tools- Install development tools"
+	@echo "  make build          - Build the application"
+	@echo "  make test           - Run tests"
+	@echo "  make clean          - Clean build files"
+	@echo "  make run            - Run the application"
+	@echo "  make migrate-up     - Run database migrations"
+	@echo "  make migrate-down   - Rollback database migrations"
+	@echo "  make lint           - Run linter"
+	@echo "  make docker-build   - Build Docker image"
+	@echo "  make docker-run     - Run Docker container"
+	@echo "  make test-db-setup  - Setup test database"
