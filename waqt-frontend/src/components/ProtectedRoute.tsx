@@ -1,35 +1,30 @@
-import { isAuthenticated } from "@/services/authService";
 import { useNavigate } from "react-router-dom";
 import { SidebarInset, SidebarProvider } from "./ui/sidebar";
 import { AppSidebar } from "./app-sidebar";
 import { useEffect } from "react";
 import TopBar from "./TopBar";
 import { useToast } from "@/hooks/use-toast";
+import { useUser } from "@/contexts/UserContext";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { isAuthenticated } = useUser();
 
   useEffect(() => {
-    if (!localStorage.getItem("token")) {
+    if (!isAuthenticated) {
       toast({
         variant: "destructive",
         title: "Authentication Error",
         description: "Please sign in to continue",
       });
       navigate("/signin");
-      return;
     }
+  }, [isAuthenticated, navigate, toast]);
 
-    if (!isAuthenticated()) {
-      toast({
-        variant: "destructive",
-        title: "Session Expired",
-        description: "Please sign in again",
-      });
-      navigate("/signin");
-    }
-  }, [navigate, toast]);
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <SidebarProvider>
@@ -38,7 +33,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
           <AppSidebar />
           <SidebarInset>
             <TopBar />
-            {children}
+            <div className="p-4">{children}</div>
           </SidebarInset>
         </div>
       </div>

@@ -1,3 +1,5 @@
 export default function TopBar() {
-  return <div>TopBar</div>;
+  return (
+    <div className="bg-foreground/15 w-full px-4 py-2 rounded-t-xl">TopBar</div>
+  );
 }
