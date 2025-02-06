@@ -23,7 +23,7 @@ Waqt is an AI-powered time management and auto-scheduling application designed t
 - **UI Library:** TailwindCSS, ShadCN
 - **State Management:** Context API / Redux (if needed)
 - **API Communication:** REST API via Axios
-- **Deployment:** Vercel / Netlify
+- **Deployment:** Vercel
 
 ## Monorepo Structure
 
