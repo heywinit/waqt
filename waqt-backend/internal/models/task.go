@@ -40,4 +40,4 @@ type Task struct {
 	// Relations
 	UserID uint `json:"user_id" gorm:"not null"`
 	User   User `json:"-" gorm:"foreignKey:UserID"`
-} 
+}
