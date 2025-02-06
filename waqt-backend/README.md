@@ -12,7 +12,7 @@ The backend of Waqt is built using Golang and provides AI-enabled scheduling and
 - **Authentication:** JWT-based authentication
 - **AI Integration:** OpenAI API / Custom ML Models
 - **Task Scheduling:** Cron jobs for automated task execution
-- **Deployment:** Vercel
+- **Deployment:** TBD
 
 ## Project Structure
 
