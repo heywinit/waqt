@@ -10,7 +10,7 @@ Waqt is an AI-powered time management and auto-scheduling application designed t
 
 - **Language:** Golang
 - **Framework:** Fiber
-- **Database:** PostgreSQL
+- **Database:** PostgreSQL (hosted on SupaBase)
 - **ORM:** GORM
 - **Authentication:** JWT / OAuth
 - **AI Integration:** OpenAI API / Custom ML models

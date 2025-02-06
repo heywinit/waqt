@@ -8,7 +8,7 @@ The backend of Waqt is built using Golang and provides AI-enabled scheduling and
 
 - **Language:** Golang
 - **Framework:** Fiber
-- **Database:** PostgreSQL (GORM ORM)
+- **Database:** PostgreSQL (GORM ORM) (hosted on SupaBase)
 - **Authentication:** JWT-based authentication
 - **AI Integration:** OpenAI API / Custom ML Models
 - **Task Scheduling:** Cron jobs for automated task execution
