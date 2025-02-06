@@ -9,8 +9,8 @@ import (
 )
 
 func TestTask_Creation(t *testing.T) {
-	db := setupTestDB(t)
-	defer clearTestDB(t, db)
+	db := SetupTestDB(t)
+	defer ClearTestDB(t, db)
 
 	// Create test user first
 	user := &User{
@@ -106,8 +106,8 @@ func TestTask_Creation(t *testing.T) {
 }
 
 func TestTask_StatusTransitions(t *testing.T) {
-	db := setupTestDB(t)
-	defer clearTestDB(t, db)
+	db := SetupTestDB(t)
+	defer ClearTestDB(t, db)
 
 	// Create test user
 	user := &User{

@@ -9,8 +9,8 @@ import (
 )
 
 func TestUser_BeforeCreate(t *testing.T) {
-	db := setupTestDB(t)
-	defer clearTestDB(t, db)
+	db := SetupTestDB(t)
+	defer ClearTestDB(t, db)
 
 	tests := []struct {
 		name     string
@@ -69,8 +69,8 @@ func TestUser_BeforeCreate(t *testing.T) {
 }
 
 func TestUser_ComparePassword(t *testing.T) {
-	db := setupTestDB(t)
-	defer clearTestDB(t, db)
+	db := SetupTestDB(t)
+	defer ClearTestDB(t, db)
 
 	user := &User{
 		Email:    "test@example.com",
@@ -115,8 +115,8 @@ func TestUser_ComparePassword(t *testing.T) {
 }
 
 func TestUser_Relations(t *testing.T) {
-	db := setupTestDB(t)
-	defer clearTestDB(t, db)
+	db := SetupTestDB(t)
+	defer ClearTestDB(t, db)
 
 	// Create test user
 	user := &User{

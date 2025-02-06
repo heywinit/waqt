@@ -12,8 +12,8 @@ import (
 
 var testDB *gorm.DB
 
-// setupTestDB creates a test database connection and runs migrations
-func setupTestDB(t *testing.T) *gorm.DB {
+// SetupTestDB creates a test database connection and runs migrations
+func SetupTestDB(t *testing.T) *gorm.DB {
 	if testDB != nil {
 		return testDB
 	}
@@ -50,8 +50,8 @@ func setupTestDB(t *testing.T) *gorm.DB {
 	return db
 }
 
-// clearTestDB cleans up all test data
-func clearTestDB(t *testing.T, db *gorm.DB) {
+// ClearTestDB cleans up all test data
+func ClearTestDB(t *testing.T, db *gorm.DB) {
 	tables := []string{"time_blocks", "schedules", "tasks", "users"}
 	for _, table := range tables {
 		err := db.Exec("TRUNCATE TABLE " + table + " CASCADE").Error

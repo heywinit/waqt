@@ -9,8 +9,8 @@ import (
 )
 
 func TestSchedule_Creation(t *testing.T) {
-	db := setupTestDB(t)
-	defer clearTestDB(t, db)
+	db := SetupTestDB(t)
+	defer ClearTestDB(t, db)
 
 	// Create test user
 	user := &User{
@@ -86,8 +86,8 @@ func TestSchedule_Creation(t *testing.T) {
 }
 
 func TestTimeBlock_Creation(t *testing.T) {
-	db := setupTestDB(t)
-	defer clearTestDB(t, db)
+	db := SetupTestDB(t)
+	defer ClearTestDB(t, db)
 
 	// Create test user
 	user := &User{
