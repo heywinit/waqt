@@ -1,23 +1,24 @@
-package server
+package main
 
 import (
 	"fmt"
 	"log"
 
+	"github.com/axiom-svgu/waqt/internal/server"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 type App struct {
-	config *Config
+	config *server.Config
 	db     *gorm.DB
 	fiber  *fiber.App
 }
 
 func NewApp() (*App, error) {
 	// Load configuration
-	config, err := LoadConfig()
+	config, err := server.LoadConfig()
 	if err != nil {
 		return nil, fmt.Errorf("error loading config: %v", err)
 	}
@@ -51,7 +52,7 @@ func NewApp() (*App, error) {
 
 func (a *App) Start() error {
 	// Setup routes
-	setupRoutes(a.fiber)
+	server.SetupRoutes(a.fiber)
 
 	// Start server
 	addr := fmt.Sprintf(":%s", a.config.Server.Port)

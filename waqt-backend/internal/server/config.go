@@ -54,45 +54,45 @@ func LoadConfig() (*Config, error) {
 
 	config := &Config{
 		Server: ServerConfig{
-			Port: getEnv("PORT", "8080"),
-			Env:  getEnv("ENV", "development"),
+			Port: GetEnv("PORT", "8080"),
+			Env:  GetEnv("ENV", "development"),
 		},
 		Database: DatabaseConfig{
-			Host:     getEnv("DB_HOST", "localhost"),
-			Port:     getEnv("DB_PORT", "5432"),
-			User:     getEnv("DB_USER", ""),
-			Password: getEnv("DB_PASSWORD", ""),
-			DBName:   getEnv("DB_NAME", "waqt_db"),
-			SSLMode:  getEnv("DB_SSLMODE", "disable"),
+			Host:     GetEnv("DB_HOST", "localhost"),
+			Port:     GetEnv("DB_PORT", "5432"),
+			User:     GetEnv("DB_USER", ""),
+			Password: GetEnv("DB_PASSWORD", ""),
+			DBName:   GetEnv("DB_NAME", "waqt_db"),
+			SSLMode:  GetEnv("DB_SSLMODE", "disable"),
 		},
 		Auth: AuthConfig{
-			JWTSecret:       getEnv("JWT_SECRET", ""),
-			TokenExpiration: parseDuration(getEnv("TOKEN_EXPIRATION", "24h")),
+			JWTSecret:       GetEnv("JWT_SECRET", ""),
+			TokenExpiration: ParseDuration(GetEnv("TOKEN_EXPIRATION", "24h")),
 		},
 		AI: AIConfig{
-			OpenAIKey: getEnv("OPENAI_API_KEY", ""),
+			OpenAIKey: GetEnv("OPENAI_API_KEY", ""),
 		},
 		Redis: RedisConfig{
-			Host:     getEnv("REDIS_HOST", "localhost"),
-			Port:     getEnv("REDIS_PORT", "6379"),
-			Password: getEnv("REDIS_PASSWORD", ""),
+			Host:     GetEnv("REDIS_HOST", "localhost"),
+			Port:     GetEnv("REDIS_PORT", "6379"),
+			Password: GetEnv("REDIS_PASSWORD", ""),
 		},
 	}
 
 	return config, nil
 }
 
-func getEnv(key, defaultValue string) string {
+func GetEnv(key, defaultValue string) string {
 	if value := os.Getenv(key); value != "" {
 		return value
 	}
 	return defaultValue
 }
 
-func parseDuration(duration string) time.Duration {
+func ParseDuration(duration string) time.Duration {
 	d, err := time.ParseDuration(duration)
 	if err != nil {
 		return 24 * time.Hour // Default to 24 hours
 	}
 	return d
-}
+} 

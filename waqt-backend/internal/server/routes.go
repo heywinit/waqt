@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
-func setupRoutes(app *fiber.App) {
+func SetupRoutes(app *fiber.App) {
 	// Middleware
 	app.Use(logger.New())
 	app.Use(recover.New())
@@ -39,4 +39,4 @@ func setupRoutes(app *fiber.App) {
 	settings := v1.Group("/settings")
 	settings.Get("/", nil)
 	settings.Put("/update", nil)
-}
+} 
