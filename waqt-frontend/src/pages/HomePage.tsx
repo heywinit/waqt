@@ -1,3 +1,5 @@
+import ProtectedRoute from "@/components/ProtectedRoute";
+
 export default function HomePage() {
-  return <div>HomePage</div>;
+  return <ProtectedRoute>HomePage</ProtectedRoute>;
 }
