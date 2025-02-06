@@ -2,15 +2,10 @@ package models
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type Schedule struct {
-	ID        uint           `json:"id" gorm:"primaryKey"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
+	BaseModel 
 
 	Date        time.Time `json:"date" gorm:"not null"`
 	IsGenerated bool      `json:"is_generated" gorm:"default:false"`
@@ -22,11 +17,8 @@ type Schedule struct {
 }
 
 type TimeBlock struct {
-	ID        uint           `json:"id" gorm:"primaryKey"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
-
+	BaseModel 
+	
 	StartTime time.Time `json:"start_time" gorm:"not null"`
 	EndTime   time.Time `json:"end_time" gorm:"not null"`
 	Title     string    `json:"title" gorm:"not null"`

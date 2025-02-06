@@ -3,6 +3,8 @@ package models
 import "time"
 
 type Setting struct {
+	BaseModel
+
 	ThemePreference             string    `json:"theme_reference"`
 	TimeZone                    string    `json:"time_zone"`
 	Language                    string    `json:"language"`

@@ -1,23 +1,18 @@
 package models
 
 import (
-	"time"
-
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 type User struct {
-	ID        uint           `json:"id" gorm:"primaryKey"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
-
+	BaseModel      // Embedding the BaseModel for common fields
+	
 	Email          string `json:"email" gorm:"unique;not null"`
 	Password       string `json:"-" gorm:"not null"`
 	FirstName      string `json:"first_name"`
 	LastName       string `json:"last_name"`
-	ProfilePicture string `json:"profile_pciture"`
+	ProfilePicture string `json:"profile_picture"`
 
 	// Relations
 	Tasks     []Task     `json:"tasks,omitempty" gorm:"foreignKey:UserID"`
