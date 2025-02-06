@@ -1,31 +1,23 @@
-# Waqt - AI-Powered Time Management & Scheduling
+# Waqt Backend - AI-Powered Time Management & Scheduling
 
 ## Overview
 
-Waqt is an AI-enabled time management and auto-scheduling application designed to optimize users' daily routines efficiently. Built with Golang, the backend leverages advanced scheduling algorithms and AI to help users manage tasks effectively.
-
-## Features
-
-- **AI-Powered Scheduling** - Automatically generates optimized daily schedules based on user priorities.
-- **Task Management** - Create, update, and delete tasks with ease.
-- **Habit Tracking** - Learn from user behavior to suggest better schedules over time.
-- **Automated Reminders** - Get notifications for upcoming tasks.
-- **Smart Prioritization** - AI determines the most important tasks and allocates time accordingly.
-- **Cross-Platform Support** - Accessible via mobile and web apps.
+The backend of Waqt is built using Golang and provides AI-enabled scheduling and time management services. It exposes a REST API for the frontend and other clients.
 
 ## Tech Stack
 
-- **Backend:** Golang (Fiber)
+- **Language:** Golang
+- **Framework:** Fiber
 - **Database:** PostgreSQL (GORM ORM)
-- **AI Integration:** OpenAI API / Custom ML Models
 - **Authentication:** JWT-based authentication
+- **AI Integration:** OpenAI API / Custom ML Models
 - **Task Scheduling:** Cron jobs for automated task execution
 - **Deployment:** Docker, Railway/Fly.io/Render
 
 ## Project Structure
 
 ```
-waqt-backend/
+backend/
 │── cmd/                   # Entry point for the application
 │── config/                # Configuration files
 │── internal/              # Business logic (models, services, repositories)
@@ -35,7 +27,7 @@ waqt-backend/
 │── tests/                 # Unit and integration tests
 │── .env                   # Environment variables
 │── Dockerfile             # Docker configuration
-│── README.md              # Project documentation
+│── README.md              # Backend documentation
 ```
 
 ## Getting Started
@@ -47,10 +39,9 @@ waqt-backend/
 
 ### Installation
 
-1. Clone the repository:
+1. Navigate to the backend directory:
    ```sh
-   git clone https://github.com/yourusername/waqt.git
-   cd waqt-backend
+   cd backend
    ```
 2. Install dependencies:
    ```sh
@@ -64,6 +55,16 @@ waqt-backend/
    ```sh
    go run cmd/server/main.go
    ```
+
+## API Endpoints
+
+| Method | Endpoint             | Description                |
+| ------ | -------------------- | -------------------------- |
+| POST   | `/auth/signup`       | User registration          |
+| POST   | `/auth/login`        | User login                 |
+| GET    | `/tasks`             | Fetch all tasks            |
+| POST   | `/tasks`             | Create a task              |
+| GET    | `/schedule/generate` | Generate AI-based schedule |
 
 ## Contributing
 
