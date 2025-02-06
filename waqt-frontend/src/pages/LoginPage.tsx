@@ -6,51 +6,78 @@ import { Label } from "@/components/ui/label";
 import { login, signup } from "@/services/authService";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { LoginData, SignupData } from "@/types/auth";
 import { Clock11 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import GoogleLogin from "@/components/GoogleLogin";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
+const loginSchema = z.object({
+  identifier: z.string().min(1, "Username or email is required"),
+  password: z.string().min(1, "Password is required"),
+});
+
+const signupSchema = z
+  .object({
+    email: z.string().email("Invalid email address"),
+    username: z
+      .string()
+      .min(3, "Username must be at least 3 characters")
+      .max(20, "Username must be at most 20 characters")
+      .regex(
+        /^[a-zA-Z0-9_-]+$/,
+        "Username can only contain letters, numbers, underscores, and hyphens"
+      ),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+      .regex(/[0-9]/, "Password must contain at least one number")
+      .regex(
+        /[^A-Za-z0-9]/,
+        "Password must contain at least one special character"
+      ),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
+
+type LoginFormData = z.infer<typeof loginSchema>;
+type SignupFormData = z.infer<typeof signupSchema>;
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const [loginData, setLoginData] = useState<LoginData>({
-    identifier: "",
-    password: "",
-  });
-  const [signupData, setSignupData] = useState<SignupData>({
-    email: "",
-    username: "",
-    password: "",
-    confirmPassword: "",
-  });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
-  const handleLoginInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setLoginData((prev) => ({
-      ...prev,
-      [id]: value,
-    }));
-  };
+  const loginForm = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      identifier: "",
+      password: "",
+    },
+  });
 
-  const handleSignupInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setSignupData((prev) => ({
-      ...prev,
-      [id]: value,
-    }));
-  };
+  const signupForm = useForm<SignupFormData>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: {
+      email: "",
+      username: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
 
-  const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleLoginSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
-    setError(null);
 
     try {
-      const response = await login(loginData);
+      const response = await login(data);
       if (response.success) {
         toast({
           title: "Success",
@@ -77,19 +104,11 @@ export default function LoginPage() {
     }
   };
 
-  const handleSignupSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSignupSubmit = async (data: SignupFormData) => {
     setIsLoading(true);
-    setError(null);
-
-    if (signupData.password !== signupData.confirmPassword) {
-      setError("Passwords do not match");
-      setIsLoading(false);
-      return;
-    }
 
     try {
-      const response = await signup(signupData);
+      const response = await signup(data);
       if (response.success) {
         toast({
           title: "Success",
@@ -134,7 +153,10 @@ export default function LoginPage() {
                 <TabsTrigger value="signup">Sign up</TabsTrigger>
               </TabsList>
               <TabsContent value="login">
-                <form className={cn("space-y-8")} onSubmit={handleLoginSubmit}>
+                <form
+                  className={cn("space-y-8")}
+                  onSubmit={loginForm.handleSubmit(handleLoginSubmit)}
+                >
                   <div className="flex flex-col items-center gap-2.5 text-center select-none">
                     <h1 className="text-2xl font-semibold tracking-tight">
                       Welcome back
@@ -163,11 +185,6 @@ export default function LoginPage() {
                         </span>
                       </div>
                     </div>
-                    {error && (
-                      <div className="text-sm text-red-500 text-center bg-red-50 py-2 px-3 rounded-md">
-                        {error}
-                      </div>
-                    )}
                     <div className="space-y-2">
                       <Label
                         htmlFor="identifier"
@@ -179,11 +196,17 @@ export default function LoginPage() {
                         id="identifier"
                         type="text"
                         placeholder="Enter your username or email"
-                        required
-                        value={loginData.identifier}
-                        onChange={handleLoginInputChange}
-                        className="h-10"
+                        {...loginForm.register("identifier")}
+                        className={cn("h-10", {
+                          "border-red-500":
+                            loginForm.formState.errors.identifier,
+                        })}
                       />
+                      {loginForm.formState.errors.identifier && (
+                        <p className="text-sm text-red-500">
+                          {loginForm.formState.errors.identifier.message}
+                        </p>
+                      )}
                     </div>
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
@@ -204,11 +227,16 @@ export default function LoginPage() {
                         id="password"
                         type="password"
                         placeholder="Enter your password"
-                        required
-                        value={loginData.password}
-                        onChange={handleLoginInputChange}
-                        className="h-10"
+                        {...loginForm.register("password")}
+                        className={cn("h-10", {
+                          "border-red-500": loginForm.formState.errors.password,
+                        })}
                       />
+                      {loginForm.formState.errors.password && (
+                        <p className="text-sm text-red-500">
+                          {loginForm.formState.errors.password.message}
+                        </p>
+                      )}
                     </div>
                     <Button
                       type="submit"
@@ -221,7 +249,10 @@ export default function LoginPage() {
                 </form>
               </TabsContent>
               <TabsContent value="signup">
-                <form className={cn("space-y-8")} onSubmit={handleSignupSubmit}>
+                <form
+                  className={cn("space-y-8")}
+                  onSubmit={signupForm.handleSubmit(handleSignupSubmit)}
+                >
                   <div className="flex flex-col items-center gap-2.5 text-center select-none">
                     <h1 className="text-2xl font-semibold tracking-tight">
                       Create an account
@@ -250,11 +281,6 @@ export default function LoginPage() {
                         </span>
                       </div>
                     </div>
-                    {error && (
-                      <div className="text-sm text-red-500 text-center bg-red-50 py-2 px-3 rounded-md">
-                        {error}
-                      </div>
-                    )}
                     <div className="space-y-2">
                       <Label htmlFor="email" className="text-sm font-medium">
                         Email
@@ -263,11 +289,16 @@ export default function LoginPage() {
                         id="email"
                         type="email"
                         placeholder="Enter your email"
-                        required
-                        value={signupData.email}
-                        onChange={handleSignupInputChange}
-                        className="h-10"
+                        {...signupForm.register("email")}
+                        className={cn("h-10", {
+                          "border-red-500": signupForm.formState.errors.email,
+                        })}
                       />
+                      {signupForm.formState.errors.email && (
+                        <p className="text-sm text-red-500">
+                          {signupForm.formState.errors.email.message}
+                        </p>
+                      )}
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="username" className="text-sm font-medium">
@@ -277,11 +308,17 @@ export default function LoginPage() {
                         id="username"
                         type="text"
                         placeholder="Choose a username"
-                        required
-                        value={signupData.username}
-                        onChange={handleSignupInputChange}
-                        className="h-10"
+                        {...signupForm.register("username")}
+                        className={cn("h-10", {
+                          "border-red-500":
+                            signupForm.formState.errors.username,
+                        })}
                       />
+                      {signupForm.formState.errors.username && (
+                        <p className="text-sm text-red-500">
+                          {signupForm.formState.errors.username.message}
+                        </p>
+                      )}
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="password" className="text-sm font-medium">
@@ -291,11 +328,17 @@ export default function LoginPage() {
                         id="password"
                         type="password"
                         placeholder="Create a password"
-                        required
-                        value={signupData.password}
-                        onChange={handleSignupInputChange}
-                        className="h-10"
+                        {...signupForm.register("password")}
+                        className={cn("h-10", {
+                          "border-red-500":
+                            signupForm.formState.errors.password,
+                        })}
                       />
+                      {signupForm.formState.errors.password && (
+                        <p className="text-sm text-red-500">
+                          {signupForm.formState.errors.password.message}
+                        </p>
+                      )}
                     </div>
                     <div className="space-y-2">
                       <Label
@@ -308,11 +351,17 @@ export default function LoginPage() {
                         id="confirmPassword"
                         type="password"
                         placeholder="Confirm your password"
-                        required
-                        value={signupData.confirmPassword}
-                        onChange={handleSignupInputChange}
-                        className="h-10"
+                        {...signupForm.register("confirmPassword")}
+                        className={cn("h-10", {
+                          "border-red-500":
+                            signupForm.formState.errors.confirmPassword,
+                        })}
                       />
+                      {signupForm.formState.errors.confirmPassword && (
+                        <p className="text-sm text-red-500">
+                          {signupForm.formState.errors.confirmPassword.message}
+                        </p>
+                      )}
                     </div>
                     <Button
                       type="submit"
