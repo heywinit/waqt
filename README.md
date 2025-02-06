@@ -14,7 +14,7 @@ Waqt is an AI-powered time management and auto-scheduling application designed t
 - **ORM:** GORM
 - **Authentication:** JWT / OAuth
 - **AI Integration:** OpenAI API / Custom ML models
-- **Deployment:** Docker, Kubernetes, AWS / DigitalOcean
+- **Deployment:** Vercel
 
 ### Frontend
 
