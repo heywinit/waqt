@@ -9,9 +9,9 @@ Waqt is an AI-powered time management and auto-scheduling application designed t
 ### Backend
 
 - **Language:** Golang
-- **Framework:** Fiber / Echo (TBD)
+- **Framework:** Fiber
 - **Database:** PostgreSQL
-- **ORM:** GORM / Ent (TBD)
+- **ORM:** GORM
 - **Authentication:** JWT / OAuth
 - **AI Integration:** OpenAI API / Custom ML models
 - **Deployment:** Docker, Kubernetes, AWS / DigitalOcean
@@ -29,7 +29,7 @@ Waqt is an AI-powered time management and auto-scheduling application designed t
 
 ```
 waqt/
-│── backend/              # Backend service (Golang)
+│── backend/             # Backend service (Golang)
 │   ├── cmd/             # Application entry points
 │   ├── config/          # Configuration files
 │   ├── internal/        # Core business logic

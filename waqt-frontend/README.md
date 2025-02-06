@@ -10,7 +10,7 @@ The frontend of Waqt is a web application built using React, Vite, and TailwindC
 - **Framework:** React (Vite)
 - **UI Library:** TailwindCSS, ShadCN
 - **State Management:** Context API / Redux (if needed)
-- **API Communication:** REST API via Axios
+- **API Communication:** REST API via Node Fetch
 - **Deployment:** Vercel / Netlify
 
 ## Project Structure
