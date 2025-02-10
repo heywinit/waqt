@@ -13,6 +13,7 @@ type Config struct {
 	Auth     AuthConfig
 	AI       AIConfig
 	Redis    RedisConfig
+	Google   GoogleConfig
 }
 
 type ServerConfig struct {
@@ -27,6 +28,12 @@ type DatabaseConfig struct {
 	Password string
 	DBName   string
 	SSLMode  string
+}
+
+type GoogleConfig struct {
+	ClientID     string
+	ClientSecret string
+	CallbackURL  string
 }
 
 type AuthConfig struct {
@@ -76,6 +83,11 @@ func LoadConfig() (*Config, error) {
 			Host:     GetEnv("REDIS_HOST", "localhost"),
 			Port:     GetEnv("REDIS_PORT", "6379"),
 			Password: GetEnv("REDIS_PASSWORD", ""),
+		},
+		Google: GoogleConfig{
+			ClientID:     GetEnv("GOOGLE_CLIENT_ID", ""),
+			ClientSecret: GetEnv("GOOGLE_CLIENT_SECRET", ""),
+			CallbackURL:  GetEnv("GOOGLE_CALLBACK_URL", ""),
 		},
 	}
 

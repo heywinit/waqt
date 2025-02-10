@@ -32,6 +32,7 @@ func SetupRoutes(app *fiber.App) {
 	auth := v1.Group("/auth")
 	auth.Post("/signup", nil) // TODO: Implement auth handlers
 	auth.Post("/login", nil)
+	auth.Post("/google/callback", nil)
 	auth.Post("/logout", nil)
 	auth.Get("/me", nil)
 

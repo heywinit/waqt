@@ -6,6 +6,8 @@ import (
 
 	"github.com/axiom-svgu/waqt/internal/server"
 	"github.com/gofiber/fiber/v2"
+	"github.com/markbates/goth"
+	"github.com/markbates/goth/providers/google"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -42,6 +44,10 @@ func NewApp() (*App, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error connecting to database: %v", err)
 	}
+
+	goth.UseProviders(
+		google.New(config.Google.ClientID, config.Google.ClientSecret, config.Google.CallbackURL),
+	)
 
 	return &App{
 		config: config,

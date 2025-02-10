@@ -17,7 +17,6 @@ type User struct {
 	ProfilePicture string `json:"profile_picture"`
 
 	GoogleID       *string   `json:"google_id,omitempty" gorm:"unique"`
-	EmailVerified  bool      `json:"email_verified" gorm:"default:false"`
 	LastLogin      time.Time `json:"last_login"`
 
 	// Relations
