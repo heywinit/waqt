@@ -4,6 +4,7 @@ import (
 	"github.com/axiom-svgu/waqt/internal/handlers"
 	"github.com/axiom-svgu/waqt/internal/middleware"
 	"github.com/axiom-svgu/waqt/internal/models"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -23,7 +24,7 @@ func SetupRoutes(app *fiber.App, config *Config) {
 	// Health check
 	app.Get("/health", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
-			"status": "ok",
+			"status":  "ok",
 		})
 	})
 
@@ -35,12 +36,13 @@ func SetupRoutes(app *fiber.App, config *Config) {
 	//Other than these, all routes are protected and require authentication header
 	auth.Use(middleware.AuthMiddleware([]byte(config.Auth.JWTSecret), "/signup", "/login", "/google/login", "/google/callback"))
 	
+	
 	// Auth routes
 	auth.Post("/signup", middleware.ValidatorMiddleware(models.UserCreateRequest{}), handlers.SignUp)
 	auth.Post("/login", middleware.ValidatorMiddleware(models.LoginRequest{}), handlers.Login)
-	auth.Post("/google/login", nil)
-	auth.Post("/google/callback", nil)
-	auth.Post("/logout", nil)
+	auth.Post("/google/login", middleware.ValidatorMiddleware(models.GoogleLoginRequest{}), handlers.GoogleLogin)
+	auth.Post("/google/callback", middleware.ValidatorMiddleware(models.GoogleCallbackRequest{}), handlers.GoogleCallback)
+	auth.Post("/logout", middleware.ValidatorMiddleware(models.LogoutRequest{}), handlers.Logout)
 
 
 	// Settings routes

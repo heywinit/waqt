@@ -11,3 +11,16 @@ type LoginRequest struct {
 	Identifier string `json:"identifier" validate:"required"`
 	Password   string `json:"password" validate:"required,min=8"`
 }
+
+type GoogleLoginRequest struct {
+	Token string `json:"token" validate:"required"`
+}
+
+type GoogleCallbackRequest struct {
+	Code string `json:"code" validate:"required"`
+	State string `json:"state" validate:"required"`
+	
+}
+
+type LogoutRequest struct {}
+
