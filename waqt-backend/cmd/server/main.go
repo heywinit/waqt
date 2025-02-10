@@ -58,7 +58,7 @@ func NewApp() (*App, error) {
 
 func (a *App) Start() error {
 	// Setup routes
-	server.SetupRoutes(a.fiber)
+	server.SetupRoutes(a.fiber, a.config)
 
 	// Start server
 	addr := fmt.Sprintf(":%s", a.config.Server.Port)
@@ -76,3 +76,5 @@ func main() {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }
+
+

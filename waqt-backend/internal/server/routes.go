@@ -1,13 +1,16 @@
 package server
 
 import (
+	"github.com/axiom-svgu/waqt/internal/handlers"
+	"github.com/axiom-svgu/waqt/internal/middleware"
+	"github.com/axiom-svgu/waqt/internal/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
-func SetupRoutes(app *fiber.App) {
+func SetupRoutes(app *fiber.App, config *Config) {
 	// Middleware
 	app.Use(logger.New())
 	app.Use(recover.New())
@@ -28,14 +31,17 @@ func SetupRoutes(app *fiber.App) {
 	api := app.Group("/api")
 	v1 := api.Group("/v1")
 
-	// Auth routes
 	auth := v1.Group("/auth")
-	auth.Post("/signup", nil) // TODO: Implement auth handlers
-	auth.Post("/login", nil)
+	//Other than these, all routes are protected and require authentication header
+	auth.Use(middleware.AuthMiddleware([]byte(config.Auth.JWTSecret), "/signup", "/login", "/google/login", "/google/callback"))
+	
+	// Auth routes
+	auth.Post("/signup", middleware.ValidatorMiddleware(models.UserCreateRequest{}), handlers.SignUp)
+	auth.Post("/login", middleware.ValidatorMiddleware(models.LoginRequest{}), handlers.Login)
 	auth.Post("/google/login", nil)
 	auth.Post("/google/callback", nil)
 	auth.Post("/logout", nil)
-	auth.Get("/me", nil)
+
 
 	// Settings routes
 	settings := v1.Group("/settings")
