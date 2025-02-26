@@ -7,7 +7,23 @@ import {
 import { post } from "./httpHelper";
 
 export function login(data: LoginData): Promise<LoginResponse> {
-  return post<LoginResponse>("/login", data);
+  console.log("login", data);
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        token: "1234567890",
+        user: {
+          name: "John Doe",
+          email: data.identifier,
+          avatar:
+            "https://api.dicebear.com/7.x/avataaars/svg?seed=" +
+            data.identifier,
+        },
+      });
+    }, 1000);
+  });
+  // return post<LoginResponse>("/login", data);
 }
 
 export function signup(data: SignupData): Promise<LoginResponse> {

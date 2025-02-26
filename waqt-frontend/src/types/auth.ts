@@ -1,6 +1,11 @@
 export interface LoginResponse {
   success: boolean;
   token: string;
+  user: {
+    name: string;
+    email: string;
+    avatar: string;
+  };
 }
 
 export interface LoginData {

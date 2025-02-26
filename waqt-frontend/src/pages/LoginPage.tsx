@@ -13,6 +13,7 @@ import GoogleLogin from "@/components/GoogleLogin";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useUser } from "@/contexts/UserContext";
 
 const loginSchema = z.object({
   identifier: z.string().min(1, "Username or email is required"),
@@ -54,6 +55,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { updateUser } = useUser();
 
   const loginForm = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -84,6 +86,11 @@ export default function LoginPage() {
           description: "Signed in successfully",
         });
         localStorage.setItem("token", response.token);
+        updateUser({
+          name: response.user.name,
+          email: response.user.email,
+          avatar: response.user.avatar,
+        });
         navigate("/");
       } else {
         toast({
@@ -115,6 +122,11 @@ export default function LoginPage() {
           description: "Account created successfully",
         });
         localStorage.setItem("token", response.token);
+        updateUser({
+          name: response.user.name,
+          email: response.user.email,
+          avatar: response.user.avatar,
+        });
         navigate("/");
       }
     } catch (err) {
