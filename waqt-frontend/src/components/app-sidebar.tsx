@@ -3,7 +3,7 @@ import {
   Bot,
   Calendar,
   Clock11,
-  Frame,
+  Folder,
   LifeBuoy,
   Send,
   SquareTerminal,
@@ -13,6 +13,7 @@ import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
 import { useUser } from "@/contexts/UserContext";
+import { getUserProjects } from "@/services/projectService";
 import {
   Sidebar,
   SidebarContent,
@@ -28,78 +29,16 @@ const navMainData = [
     title: "Dashboard",
     url: "#",
     icon: SquareTerminal,
-    isActive: true,
-    items: [
-      {
-        title: "Overview",
-        url: "#",
-      },
-      {
-        title: "Analytics",
-        url: "#",
-      },
-      {
-        title: "Reports",
-        url: "#",
-      },
-    ],
   },
   {
     title: "Tasks",
     url: "#",
     icon: Bot,
-    items: [
-      {
-        title: "All Tasks",
-        url: "#",
-      },
-      {
-        title: "Completed",
-        url: "#",
-      },
-      {
-        title: "Pending",
-        url: "#",
-      },
-    ],
   },
   {
     title: "Calendar",
     url: "#",
     icon: Calendar,
-    items: [
-      {
-        title: "Daily View",
-        url: "#",
-      },
-      {
-        title: "Weekly View",
-        url: "#",
-      },
-      {
-        title: "Monthly View",
-        url: "#",
-      },
-    ],
-  },
-  {
-    title: "Projects",
-    url: "#",
-    icon: Frame,
-    items: [
-      {
-        title: "Ongoing Projects",
-        url: "#",
-      },
-      {
-        title: "Completed Projects",
-        url: "#",
-      },
-      {
-        title: "New Project",
-        url: "#",
-      },
-    ],
   },
 ];
 
@@ -116,10 +55,48 @@ const navSecondaryData = [
   },
 ];
 
+interface ProjectNavItem {
+  title: React.ReactNode;
+  url: string;
+}
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useUser();
+  const [projects, setProjects] = React.useState<ProjectNavItem[]>([]);
 
-  // If no user is logged in, you might want to show a different sidebar or return null
+  React.useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const projectData = await getUserProjects();
+        setProjects(
+          projectData.map((project) => ({
+            title: (
+              <div className="flex items-center gap-2">
+                <div
+                  className="h-2 w-2 rounded-full"
+                  style={{ backgroundColor: project.color }}
+                />
+                <span>{project.name}</span>
+              </div>
+            ),
+            url: `#/projects/${project.id}`,
+          }))
+        );
+      } catch (error) {
+        console.error("Failed to fetch projects:", error);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  const projectsNav = {
+    title: "Projects",
+    url: "#/projects",
+    icon: Folder,
+    items: projects,
+  };
+
   if (!user) {
     return null;
   }
@@ -143,7 +120,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={navMainData} />
+        <NavMain items={[...navMainData, projectsNav]} />
         <NavSecondary items={navSecondaryData} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
