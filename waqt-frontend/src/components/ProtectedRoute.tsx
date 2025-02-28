@@ -39,11 +39,10 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
           {/* Main Content */}
           <div className="flex-1 flex flex-col min-h-0">
             <TopBar />
-            <div className="flex-1 overflow-auto p-2">{children}</div>
+            <div className="flex-1 overflow-auto p-4">{children}</div>
           </div>
 
           {/* AI Chat */}
-
           <AIChatWindow />
         </div>
       </div>

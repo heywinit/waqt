@@ -7,6 +7,7 @@ import {
   LifeBuoy,
   Send,
   SquareTerminal,
+  Settings,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -42,6 +43,11 @@ const navMainData = [
 ];
 
 const navSecondaryData = [
+  {
+    title: "Settings",
+    url: "/settings",
+    icon: Settings,
+  },
   {
     title: "Support",
     url: "#",
