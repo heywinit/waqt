@@ -31,8 +31,13 @@ const generateAccentColorVariables = (color: AccentColor, isDark: boolean) => {
   const colorSet = accentColors[color][isDark ? "dark" : "light"];
   const root = document.documentElement;
 
-  root.style.setProperty("--accent", colorSet.base);
-  root.style.setProperty("--accent-foreground", colorSet.foreground);
+  // Set the base accent color variables that our CSS system uses
+  root.style.setProperty("--accent-base", colorSet.base);
+  root.style.setProperty("--accent-base-foreground", colorSet.foreground);
+
+  // Set primary color directly (this is what shadcn uses)
+  root.style.setProperty("--primary", colorSet.base);
+  root.style.setProperty("--primary-foreground", colorSet.foreground);
 };
 
 export function ThemeProvider({
