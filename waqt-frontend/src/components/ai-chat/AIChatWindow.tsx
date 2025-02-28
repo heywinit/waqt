@@ -101,78 +101,124 @@ export function AIChatWindow({
   };
 
   return (
-    <div className={cn("flex flex-col h-full", className)}>
-      <ScrollArea className="flex-1 p-4">
-        <div className="space-y-4">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={cn(
-                "flex flex-col",
-                message.role === "user" ? "items-end" : "items-start"
-              )}
-            >
-              <div
-                className={cn(
-                  "max-w-[80%] rounded-lg px-4 py-2",
-                  message.role === "user"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted"
-                )}
-              >
-                <p className="text-sm">{message.content}</p>
-              </div>
-              {message.status === "error" && (
-                <span className="text-xs text-destructive mt-1">
-                  Failed to send message
-                </span>
-              )}
-            </div>
-          ))}
-          {isTyping && (
-            <div className="flex items-center space-x-2 text-muted-foreground">
-              <span className="text-sm">AI is typing</span>
-              <div className="flex space-x-1">
-                <span className="animate-bounce">.</span>
-                <span
-                  className="animate-bounce"
-                  style={{ animationDelay: "0.2s" }}
-                >
-                  .
-                </span>
-                <span
-                  className="animate-bounce"
-                  style={{ animationDelay: "0.4s" }}
-                >
-                  .
-                </span>
-              </div>
-            </div>
-          )}
-          <div ref={messagesEndRef} />
+    <div className="w-80 border-l border-border bg-card/50 backdrop-blur-sm flex flex-col h-full">
+      {/* Header with gradient background */}
+      <div className="p-4 border-b border-border bg-gradient-to-r from-primary/10 to-secondary/10">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="size-2 rounded-full bg-primary animate-pulse" />
+            <h2 className="font-semibold">AI Assistant</h2>
+          </div>
+          <button className="rounded-full size-6 inline-flex items-center justify-center hover:bg-muted transition-colors">
+            ×
+          </button>
         </div>
-      </ScrollArea>
+      </div>
 
-      <form onSubmit={handleSubmit} className="p-4 border-t">
-        <div className="flex space-x-2">
-          <Textarea
-            ref={textareaRef}
-            value={inputValue}
-            onChange={handleTextareaChange}
-            placeholder="Type your message..."
-            className="min-h-[40px] max-h-[200px] resize-none"
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleSubmit(e);
-              }
-            }}
-          />
-          <Button type="submit" disabled={!inputValue.trim() || isTyping}>
-            Send
-          </Button>
+      <div className="flex-1 overflow-hidden">
+        <div className={cn("flex flex-col h-full", className)}>
+          <ScrollArea className="flex-1 px-4">
+            <div className="space-y-4 py-4">
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={cn(
+                    "flex flex-col",
+                    message.role === "user" ? "items-end" : "items-start"
+                  )}
+                >
+                  <div
+                    className={cn(
+                      "max-w-[85%] rounded-2xl px-4 py-2 shadow-sm",
+                      message.role === "user"
+                        ? "bg-gradient-to-br from-primary to-primary/90 text-primary-foreground"
+                        : "bg-muted/50 border border-border/50"
+                    )}
+                  >
+                    <p className="text-sm leading-relaxed">{message.content}</p>
+                  </div>
+                  {message.status === "error" && (
+                    <span className="text-xs text-destructive mt-1 flex items-center gap-1">
+                      <svg
+                        className="size-3"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                        />
+                      </svg>
+                      Failed to send
+                    </span>
+                  )}
+                </div>
+              ))}
+              {isTyping && (
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <div className="flex gap-1">
+                    {[0, 1, 2].map((i) => (
+                      <span
+                        key={i}
+                        className="size-2 rounded-full bg-primary/40"
+                        style={{
+                          animation: "bounce 1.4s infinite",
+                          animationDelay: `${i * 0.2}s`,
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-xs font-medium">AI is thinking...</span>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+          </ScrollArea>
+
+          <div className="p-4 border-t border-border bg-background/50 backdrop-blur-sm">
+            <form onSubmit={handleSubmit}>
+              <div className="flex gap-2">
+                <Textarea
+                  ref={textareaRef}
+                  value={inputValue}
+                  onChange={handleTextareaChange}
+                  placeholder="Message AI Assistant..."
+                  className="min-h-[40px] max-h-[200px] resize-none rounded-xl bg-muted/50"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSubmit(e);
+                    }
+                  }}
+                />
+                <Button
+                  type="submit"
+                  size="icon"
+                  disabled={!inputValue.trim() || isTyping}
+                  className="rounded-xl shrink-0"
+                >
+                  <svg
+                    className="size-4 rotate-90"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                    />
+                  </svg>
+                </Button>
+              </div>
+            </form>
+          </div>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

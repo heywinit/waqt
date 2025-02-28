@@ -43,19 +43,8 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
           </div>
 
           {/* AI Chat */}
-          <div className="w-80 border-l border-border bg-card flex flex-col h-full">
-            <div className="p-4 border-b border-border">
-              <div className="flex items-center justify-between">
-                <h2 className="font-semibold">AI Assistant</h2>
-                <button className="text-muted-foreground hover:text-foreground">
-                  ×
-                </button>
-              </div>
-            </div>
-            <div className="flex-1 overflow-auto">
-              <AIChatWindow />
-            </div>
-          </div>
+
+          <AIChatWindow />
         </div>
       </div>
     </SidebarProvider>
