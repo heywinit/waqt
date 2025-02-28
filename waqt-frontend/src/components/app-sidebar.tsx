@@ -84,7 +84,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <span>{project.name}</span>
               </div>
             ),
-            url: `#/projects/${project.id}`,
+            url: `/projects/${project.id}`,
           }))
         );
       } catch (error) {

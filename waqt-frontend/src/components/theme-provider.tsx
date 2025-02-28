@@ -1,15 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { AccentColor, accentColors } from "../lib/colors";
 
 type Theme = "dark" | "light" | "system";
-type AccentColor =
-  | "blue"
-  | "green"
-  | "red"
-  | "purple"
-  | "orange"
-  | "pink"
-  | "yellow"
-  | "teal";
 
 type ThemeProviderProps = {
   children: React.ReactNode;
@@ -36,28 +28,11 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 // Helper function to generate CSS variables for an accent color
 const generateAccentColorVariables = (color: AccentColor, isDark: boolean) => {
-  // You can adjust these values based on your needs
-  const colors = {
-    blue: { light: "#0066ff", dark: "#3385ff" },
-    green: { light: "#10B981", dark: "#34D399" },
-    red: { light: "#EF4444", dark: "#F87171" },
-    purple: { light: "#8B5CF6", dark: "#A78BFA" },
-    orange: { light: "#F97316", dark: "#FB923C" },
-    pink: { light: "#EC4899", dark: "#F472B6" },
-    yellow: { light: "#EAB308", dark: "#FACC15" },
-    teal: { light: "#14B8A6", dark: "#2DD4BF" },
-  };
-
-  const baseColor = isDark ? colors[color].dark : colors[color].light;
+  const colorSet = accentColors[color][isDark ? "dark" : "light"];
   const root = document.documentElement;
 
-  // Set the main accent color
-  root.style.setProperty("--accent", baseColor);
-
-  // Set different opacity variants
-  root.style.setProperty("--accent-foreground", isDark ? "#fff" : "#000");
-  root.style.setProperty("--accent-hover", `${baseColor}dd`);
-  root.style.setProperty("--accent-muted", `${baseColor}33`);
+  root.style.setProperty("--accent", colorSet.base);
+  root.style.setProperty("--accent-foreground", colorSet.foreground);
 };
 
 export function ThemeProvider({

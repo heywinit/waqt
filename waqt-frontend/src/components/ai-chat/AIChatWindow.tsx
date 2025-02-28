@@ -103,7 +103,7 @@ export function AIChatWindow({
   return (
     <div className="w-80 border-l border-border bg-card/50 backdrop-blur-sm flex flex-col h-full">
       {/* Header with gradient background */}
-      <div className="p-4 border-b border-border bg-gradient-to-r from-primary/10 to-secondary/10">
+      <div className="p-4 border-b border-border bg-foreground/15">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="size-2 rounded-full bg-primary animate-pulse" />
